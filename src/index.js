@@ -2,6 +2,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {Provider} from 'react-redux';
+import store from '../src/state/store'
 import "./index.css";
 
 import AddPost from "./routes/AddPost";
@@ -48,6 +50,9 @@ const routes = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
+    <Provider  store={store}>
     <RouterProvider router={routes} />
+
+    </Provider>
   </React.StrictMode>
 );

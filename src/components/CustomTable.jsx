@@ -1,32 +1,21 @@
-import {
-    Table,
-    Button,
-    ButtonGroup,
-  } from "react-bootstrap";
-const CustomTable = () => {
+import { memo}from 'react'
+import { Table } from "react-bootstrap";
+import PostListItem from "./PostListItem";
+const CustomTable = ({ data,deletePostHandle }) => {
   return (
     <Table striped bordered hover>
-    <thead>
-      <tr>
-        <th>#</th>
-        <th style={{ width: "70%" }}>Title</th>
-        <th style={{ width: "10%" }}></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>#1</td>
-        <td>this is title 1</td>
-        <td>
-          <ButtonGroup aria-label="Basic example">
-            <Button variant="success">Edit</Button>
-            <Button variant="danger">Delete</Button>
-          </ButtonGroup>
-        </td>
-      </tr>
-    </tbody>
-  </Table>
-  )
-}
+      <thead>
+        <tr>
+          <th>#</th>
+          <th style={{ width: "70%" }}>Title</th>
+          <th style={{ width: "10%" }}></th>
+        </tr>
+      </thead>
+      <tbody>
+        <PostListItem  data={data} deletePostHandle={deletePostHandle}/>
+      </tbody>
+    </Table>
+  );
+};
 
-export default CustomTable
+export default memo(CustomTable);
