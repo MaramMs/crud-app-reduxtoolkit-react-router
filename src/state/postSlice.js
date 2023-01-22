@@ -13,6 +13,19 @@ export const fetchPosts = createAsyncThunk(
     }
   }
 );
+export const fetchPost = createAsyncThunk(
+  "posts/fetchPost",
+  async (id, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const res = await fetch(`http://localhost:5000/posts/${id}`);
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      rejectWithValue(error.message);
+    }
+  }
+);
 
 export const deletePost = createAsyncThunk(
   "posts/deletePost",
@@ -52,13 +65,27 @@ export const insertPost = createAsyncThunk(
     }
   }
 );
-const initialState = { records: [], loading: false, error: null };
+const initialState = { records: [], loading: false, error: null ,record:{}};
 const postSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {},
   extraReducers: {
-    //fetch Post
+    // fetch post
+    [fetchPost.pending]: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    [fetchPost.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.record = action.payload;
+    },
+    [fetchPost.rejected]: (state, action) => {
+      state.loading = false;
+
+      state.error = action.payload;
+    },
+    //fetch Posts
     [fetchPosts.pending]: (state) => {
       state.loading = true;
       state.error = null;
