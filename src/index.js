@@ -1,17 +1,26 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import {Provider} from 'react-redux';
-import store from '../src/store/store'
+import { Provider } from "react-redux";
+import store from "../src/store/store";
 import "./index.css";
-
-import AddPost from "./routes/AddPost";
-import Details from "./routes/Details";
-import EditPost from "./routes/EditPost";
 import Index from "./routes/Index";
 import PageNotFound from "./routes/PageNotFound";
 import RootLayout from "./routes/RootLayout";
+
+const AddPost = lazy(() => import("./routes/AddPost"));
+const EditPost = lazy(() => import("./routes/EditPost"));
+const Details = lazy(() => import("./routes/Details"));
+
+const loaderHandler = ({ params: { id } }) => {
+  if (isNaN(id)) {
+    throw new Response("Bad Request", {
+      statusText: "please insert id post",
+      status: 400,
+    });
+  }
+};
 
 const routes = createBrowserRouter([
   {
@@ -25,23 +34,31 @@ const routes = createBrowserRouter([
       },
       {
         path: "post/add",
-        element: <AddPost />,
+        element: (
+          <Suspense fallback="please wait">
+            <AddPost />
+          </Suspense>
+        ),
       },
       {
         path: "post/:id/edit",
-        element: <EditPost />,
+        element: (
+          <Suspense fallback="please wait">
+            {" "}
+            <EditPost />
+          </Suspense>
+        ),
+        loader: loaderHandler,
       },
       {
         path: "post/:id/details",
-        element: <Details />,
-        loader: ({ params: { id } }) => {
-          if (isNaN(id)) {
-            throw new Response("Bad Request", {
-              statusText: "please insert id post",
-              status: 400,
-            });
-          }
-        },
+        element: (
+          <Suspense fallback="please wait">
+            {" "}
+            <Details />{" "}
+          </Suspense>
+        ),
+        loader: loaderHandler,
       },
     ],
   },
@@ -50,9 +67,8 @@ const routes = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Provider  store={store}>
-    <RouterProvider router={routes} />
-
+    <Provider store={store}>
+      <RouterProvider router={routes} />
     </Provider>
   </React.StrictMode>
 );
