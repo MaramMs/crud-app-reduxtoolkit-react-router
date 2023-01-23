@@ -59,7 +59,6 @@ export const insertPost = createAsyncThunk(
         },
       });
       const data = res.json();
-      console.log(data, "data");
 
       return data;
     } catch (error) {
@@ -81,7 +80,6 @@ export const updatePost = createAsyncThunk(
         },
       });
       const data = res.json();
-      console.log(data, "from data");
       return data;
     } catch (error) {
       rejectWithValue(error.message);

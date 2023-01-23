@@ -1,7 +1,6 @@
 import React from "react";
 
 const Loading = ({ loading, error, children }) => {
-  console.log(children , 'chil');
   const elementType = children?.type?.render?.displayName;
   const renderHandler = () => {
     const buttonClone = React.cloneElement(

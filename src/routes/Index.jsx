@@ -12,7 +12,6 @@ const Index = () => {
   useEffect(() => {
     dispatch(fetchPosts());
   }, [dispatch]);
-  console.log(records);
 
   const deletePostHandle =useCallback((id) => {
     dispatch(deletePost(id));
