@@ -1,9 +1,10 @@
 import { Button, ButtonGroup } from "react-bootstrap";
-import {Link} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
-const PostListItem = ({ data,deletePostHandle}) => {
-  const deleteHandler = (item) =>{
-    if(window.confirm('Do you want delete this item')){
+const PostListItem = ({ data, deletePostHandle ,isLogin}) => {
+  const navigate = useNavigate();
+  const deleteHandler = (item) => {
+    if (window.confirm('Do you want delete this item')) {
       deletePostHandle(item)
 
     }
@@ -15,14 +16,14 @@ const PostListItem = ({ data,deletePostHandle}) => {
         {post.title}</Link></td>
       <td>
         <ButtonGroup aria-label="Basic example">
-          <Button variant="success">Edit</Button>
-          <Button variant="danger" onClick={() =>deleteHandler(post.id)}>Delete</Button>
+          <Button variant="success" onClick={() => navigate(`post/${post.id}/edit`)}>Edit</Button>
+          <Button variant="danger" onClick={() => deleteHandler(post.id)} disabled={!isLogin}>Delete</Button>
         </ButtonGroup>
       </td>
     </tr>
   ));
   return <>
-  { posts }
+    {posts}
   </>;
 };
 

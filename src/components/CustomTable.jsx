@@ -1,7 +1,7 @@
 import { memo}from 'react'
 import { Table } from "react-bootstrap";
 import PostListItem from "./PostListItem";
-const CustomTable = ({ data,deletePostHandle }) => {
+const CustomTable = ({ data,deletePostHandle,isLogin}) => {
   return (
     <Table striped bordered hover>
       <thead>
@@ -12,7 +12,7 @@ const CustomTable = ({ data,deletePostHandle }) => {
         </tr>
       </thead>
       <tbody>
-        <PostListItem  data={data} deletePostHandle={deletePostHandle}/>
+        <PostListItem  data={data} deletePostHandle={deletePostHandle} isLogin={isLogin}/>
       </tbody>
     </Table>
   );

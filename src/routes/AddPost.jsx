@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useDispatch , useSelector} from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { insertPost } from "../state/postSlice";
+import { insertPost } from "../store/postSlice";
 import { Form, Button } from "react-bootstrap";
 import Loading from "../components/Loading";
+import withGuard from "../utils/withGuard";
 
 const AddPost = () => {
   const [title, setTitle] = useState("");
@@ -51,4 +52,4 @@ const AddPost = () => {
   );
 };
 
-export default AddPost;
+export default withGuard(AddPost);

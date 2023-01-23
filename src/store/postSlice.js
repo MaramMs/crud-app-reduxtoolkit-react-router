@@ -45,8 +45,10 @@ export const deletePost = createAsyncThunk(
 export const insertPost = createAsyncThunk(
   "posts/insertPost",
   async (item, thunkAPI) => {
-    const { rejectWithValue,getState } = thunkAPI;
-    const {auth:{userId}} = getState();
+    const { rejectWithValue, getState } = thunkAPI;
+    const {
+      auth: { userId },
+    } = getState();
     item.userId = userId;
     try {
       const res = await fetch("http://localhost:5000/posts", {
@@ -65,16 +67,42 @@ export const insertPost = createAsyncThunk(
     }
   }
 );
-const initialState = { records: [], loading: false, error: null ,record:{}};
+
+export const updatePost = createAsyncThunk(
+  "posts/updatePost",
+  async (item, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const res = await fetch(`http://localhost:5000/posts/${item.id}`, {
+        method: "PATCH",
+        body: JSON.stringify(item),
+        headers: {
+          "content-type": " application/json; charset=utf-8",
+        },
+      });
+      const data = res.json();
+      console.log(data, "from data");
+      return data;
+    } catch (error) {
+      rejectWithValue(error.message);
+    }
+  }
+);
+const initialState = { records: [], loading: false, error: null, record: {} };
 const postSlice = createSlice({
   name: "posts",
   initialState,
-  reducers: {},
+  reducers: {
+    cleanRecord: (state) => {
+      state.record = {};
+    },
+  },
   extraReducers: {
     // fetch post
     [fetchPost.pending]: (state) => {
       state.loading = true;
       state.error = null;
+      state.record = {};
     },
     [fetchPost.fulfilled]: (state, action) => {
       state.loading = false;
@@ -106,12 +134,24 @@ const postSlice = createSlice({
     },
     [insertPost.fulfilled]: (state, action) => {
       state.loading = false;
-      console.log(action.payload, "from state");
       state.records.push(action.payload);
     },
     [insertPost.rejected]: (state, action) => {
       state.loading = false;
 
+      state.error = action.payload;
+    },
+    // update post
+    [updatePost.pending]: (state) => {
+      state.loading = true;
+      state.error = false;
+    },
+    [updatePost.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.record = action.payload;
+    },
+    [updatePost.rejected]: (state, action) => {
+      state.loading = false;
       state.error = action.payload;
     },
     // delete post
@@ -130,5 +170,5 @@ const postSlice = createSlice({
     },
   },
 });
-
+export const {cleanRecord } =  postSlice.actions
 export default postSlice.reducer;
